@@ -76,6 +76,6 @@ class CPU(InstructionBase):
         print("Starting CPU execution at {}".format(self.pc.get_contents()))
         opcode = self.get_memory_location_contents_and_inc_pc()
         while opcode != 0:
-            self.components[opcode].run()
+            self.instructions[opcode].run()
             opcode = self.get_memory_location_contents_and_inc_pc()
         print("Ending CPU execution at {}".format(self.pc.get_contents()))

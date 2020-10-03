@@ -28,7 +28,7 @@ def main():
 
     instructions_by_opcode = {ins.opcode: ins for ins in instruction_set}
 
-    cpu = CPU("cpu", 0, RAM, P, instructions_by_opcode)
+    cpu = CPU("cpu", 0, RAM, P, None, instructions_by_opcode)
 
     RAM.set_contents_value(0, 2)
     RAM.set_contents_value(1, 99)

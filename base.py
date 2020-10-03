@@ -37,12 +37,13 @@ class MemoryBase(ComponentBase):
 
 class InstructionBase:
 
-    def __init__(self, name, opcode, memory, pc, components=None):
+    def __init__(self, name, opcode, memory, pc, components=None, instructions=None):
         self.name = name
         self.opcode = opcode
         self.memory = memory
         self.pc = pc
         self.components = components
+        self.instructions = instructions
 
     def get_memory_location_contents_and_inc_pc(self):
         pc_value = self.pc.get_contents()
