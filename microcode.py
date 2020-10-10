@@ -1,8 +1,6 @@
 from base import InstructionBase
 
 
-class MicroCode()
-
 class LDRV(InstructionBase):
     '''
     Load value into specified register
@@ -64,18 +62,4 @@ class JMPV(InstructionBase):
         if self.components:
             if not self.components[0].get_contents():
                 return
-        self.pc.set_contents(address)
-
-
-class CPU(InstructionBase):
-    '''
-    Runs program until no more instructions
-    '''
-
-    def run(self):
-        print("Starting CPU execution at {}".format(self.pc.get_contents()))
-        opcode = self.get_memory_location_contents_and_inc_pc()
-        while opcode != 0:
-            self.instructions[opcode].run()
-            opcode = self.get_memory_location_contents_and_inc_pc()
-        print("Ending CPU execution at {}".format(self.pc.get_contents()))
+        self.program_counter.set_contents(address)
