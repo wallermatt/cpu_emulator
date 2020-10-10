@@ -1,7 +1,7 @@
 from base import InstructionBase
 
 
-
+class MicroCode()
 
 class LDRV(InstructionBase):
     '''

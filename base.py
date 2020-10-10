@@ -35,6 +35,40 @@ class MemoryBase(ComponentBase):
         return [e.get_contents() for e in self.contents]
 
 
+class Component:
+
+    def __init__(self, name):
+        self.name = name
+        self.contents = 0
+
+    def get_name(self):
+        return self.name
+
+    def get_contents(self):
+        return self.contents
+
+    def set_contents(self, value):
+        self.contents = value
+
+
+class Memory:
+
+    def __init__(self, size):
+        self.contents = [ComponentBase("address: {}".format(e)) for e in range(size)]
+
+    def get_contents(self, address):
+        return self.contents[address]
+
+    def get_contents_value(self, address):
+        return self.contents[address].get_contents()
+
+    def set_contents_value(self, address, value):
+        self.contents[address].set_contents(value)
+
+    def dump(self):
+        return [e.get_contents() for e in self.contents]
+
+
 class InstructionBase:
 
     def __init__(self, name, opcode, memory, pc, components=None, instructions=None):
@@ -54,3 +88,16 @@ class InstructionBase:
     def run(self):
         pass
 
+
+class CPUBase:
+
+    MEMORY_
+
+
+
+
+    def __init__(self, memory_size, program_counter, registers, instructions):
+        self.memory = Memory(memory_size)
+        self.program_counter = Component("program_counter")
+        self.registers = registers
+        # self.instructions = instructions
