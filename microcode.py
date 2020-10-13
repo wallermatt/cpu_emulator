@@ -5,6 +5,7 @@ class LDRV(InstructionBase):
     '''
     Load value into specified register
     '''
+    LENGTH = 2
 
     def run(self):
         value = self.get_memory_location_contents_and_inc_pc()
@@ -15,6 +16,7 @@ class LDRR(InstructionBase):
     '''
     Load contents from register 1 to register 0
     '''
+    LENGTH = 1
 
     def run(self):
         value = self.components[1].get_contents()
@@ -25,6 +27,7 @@ class LDRM(InstructionBase):
     '''
     Load memory location value into specified register
     '''
+    LENGTH = 2
 
     def run(self):
         address = self.get_memory_location_contents_and_inc_pc()
@@ -36,6 +39,7 @@ class LDMR(InstructionBase):
     '''
     Load register into memory location
     '''
+    LENGTH = 2
 
     def run(self):
         address = self.get_memory_location_contents_and_inc_pc()
@@ -47,6 +51,7 @@ class GTRR(InstructionBase):
     '''
     Compare two registers - if first > second then set third component to 1, else 0
     '''
+    LENGTH = 1
 
     def run(self):
         if self.components[0].get_contents() > self.components[1].get_contents():
@@ -56,6 +61,10 @@ class GTRR(InstructionBase):
 
 
 class JMPV(InstructionBase):
+    '''
+    Jump to address - either immediate or check if specified register/flag is not zero
+    '''
+    LENGTH = 2
 
     def run(self):
         address = self.get_memory_location_contents_and_inc_pc()
@@ -63,3 +72,18 @@ class JMPV(InstructionBase):
             if not self.components[0].get_contents():
                 return
         self.program_counter.set_contents(address)
+
+
+class JMNV(InstructionBase):
+    '''
+    Jump to address - either immediate or check if specified register/flag is zero
+    '''
+    LENGTH = 2
+
+    def run(self):
+        address = self.get_memory_location_contents_and_inc_pc()
+        if self.components:
+            if self.components[0].get_contents():
+                return
+        self.program_counter.set_contents(address)
+
