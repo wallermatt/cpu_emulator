@@ -57,4 +57,24 @@ class CPUTest(InstructionBase):
         print("Ending CPU execution at {}".format(self.program_counter.get_contents()))
 
     def disassemble(self):
-        
+        disassembly = []
+        address = 0
+        while address < self.MEMORY_SIZE:
+            current_row = []
+            contents = self.memory.get_contents_value(address)
+            if contents == 0:
+                address += 1
+                continue
+            if contents not in self.instructions_by_opcode:
+                current_row = [address, contents]
+            else:
+                instruction = self.instructions_by_opcode[contents]
+                current_row = [address, instruction.name]
+                number_of_args = instruction.LENGTH - 1
+                for _ in range(number_of_args):
+                    address += 1
+                    current_row.append(self.memory.get_contents_value(address))
+
+            disassembly.append(current_row)
+            address += 1
+        return disassembly
