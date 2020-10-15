@@ -1,3 +1,4 @@
+import csv
 from base import Component, Memory, InstructionBase
 from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV
 
@@ -13,6 +14,7 @@ class CPUTest(InstructionBase):
         self.registers = self._define_registers()
         self.instructions = self._define_instructions()
         self.instructions_by_opcode = {ins.opcode: ins for ins in self.instructions}
+        self.instructions_by_name = {ins.name: ins for ins in self.instructions}
 
     def _define_registers(self):
         registers = []
@@ -48,6 +50,18 @@ class CPUTest(InstructionBase):
     
         return instructions
 
+    def _decimal_to_hex(self, decimal_int):
+        return hex(decimal_int)[2:]
+
+    def _hex_to_decimal(self, hex_str):
+        return int(hex_str, 16)
+
+    def _load_file_to_list(self, filename):
+        row_list = []
+        with open(filename, 'r') as f:
+            row_list = [r.strip('\n') for r in f.readlines()]
+        return row_list
+    
     def run(self):
         print("Starting CPU execution at {}".format(self.program_counter.get_contents()))
         opcode = self.get_memory_location_contents_and_inc_pc()
@@ -60,21 +74,43 @@ class CPUTest(InstructionBase):
         disassembly = []
         address = 0
         while address < self.MEMORY_SIZE:
-            current_row = []
             contents = self.memory.get_contents_value(address)
-            if contents == 0:
-                address += 1
-                continue
-            if contents not in self.instructions_by_opcode:
-                current_row = [address, contents]
-            else:
+            current_row = [address, contents]
+            if contents in self.instructions_by_opcode:
                 instruction = self.instructions_by_opcode[contents]
-                current_row = [address, instruction.name]
+                current_row.append(instruction.name)
                 number_of_args = instruction.LENGTH - 1
                 for _ in range(number_of_args):
                     address += 1
                     current_row.append(self.memory.get_contents_value(address))
-
             disassembly.append(current_row)
             address += 1
         return disassembly
+
+    def disassemble_to_file(self, filename="cpu.csv"):
+        disassembly = self.disassemble()
+        with open(filename, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(disassembly)
+
+    def simple_assembler(self, filename):
+        row_list = self._load_file_to_list(filename)
+        contents_list = []
+        for row in row_list:
+            symbols = row.split(',')
+            if symbols[0] in self.instructions_by_name:
+                instruction = self.instructions_by_name[symbols[0]]
+                if len(symbols) != instruction.LENGTH:
+                    raise('{} length is {} but symbols are {}'. format(
+                        instruction.name,
+                        instruction.LENGTH,
+                        symbols
+                    ))
+                symbols[0] = instruction.opcode
+            for symbol in symbols:
+                contents_list.append(int(symbol))
+        print(contents_list)
+        self.memory.load(contents_list)
+
+
+
