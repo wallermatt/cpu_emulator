@@ -1,6 +1,6 @@
 import csv
 from base import Component, Memory, InstructionBase
-from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INC
+from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR
 
 
 class CPUTest(InstructionBase):
@@ -36,17 +36,28 @@ class CPUTest(InstructionBase):
         instructions = [
             LDRV("LDAV", 1, self.memory, self.program_counter, [self.A]),
             LDRV("LDBV", 2, self.memory, self.program_counter, [self.B]),
-            LDRR("LDAB", 3, self.memory, self.program_counter, [self.A,self.B]),
-            LDRR("LDBA", 4, self.memory, self.program_counter, [self.B,self.A]),
+            LDRR("LDAB", 3, self.memory, self.program_counter, [self.A, self.B]),
+            LDRR("LDBA", 4, self.memory, self.program_counter, [self.B, self.A]),
             LDRM("LDAM", 5, self.memory, self.program_counter, [self.A]),
             LDRM("LDBM", 6, self.memory, self.program_counter, [self.B]),
             LDMR("LDMA", 7, self.memory, self.program_counter, [self.A]),
             LDMR("LDMB", 8, self.memory, self.program_counter, [self.B]),
-            GTRR("GTAB", 9, self.memory, self.program_counter, [self.A,self.B,self.R]),
-            GTRR("GTBA", 10, self.memory, self.program_counter, [self.A,self.R]),
+            GTRR("GTAB", 9, self.memory, self.program_counter, [self.A, self.B, self.R]),
+            GTRR("GTBA", 10, self.memory, self.program_counter, [self.B, self.A, self.R]),
             JMPV("JMPV", 11, self.memory, self.program_counter),
             JMPV("JCRV", 12, self.memory, self.program_counter, [self.R]),
-            INC("INCA", 13, self.memory, self.program_counter, [self.A, self.C]),
+            INCR("INCA", 13, self.memory, self.program_counter, [self.A, self.C]),
+            INCR("INCB", 14, self.memory, self.program_counter, [self.B, self.C]),
+            ADDRR("ADDAB", 15, self.memory, self.program_counter, [self.A, self.B, self.C]),
+            ADDRR("ADDBA", 16, self.memory, self.program_counter, [self.B, self.A, self.C]),
+            DECR("DECA", 17, self.memory, self.program_counter, [self.A, self.C]),
+            DECR("DECB", 17, self.memory, self.program_counter, [self.B, self.C]),
+            SUBRR("SUBAB", 18, self.memory, self.program_counter, [self.A, self.B, self.C]),
+            SUBRR("SUBBA", 19, self.memory, self.program_counter, [self.B, self.A, self.C]),
+            LTRR("LTAB", 20, self.memory, self.program_counter, [self.A, self.B, self.R]),
+            LTRR("LTBA", 21, self.memory, self.program_counter, [self.B, self.A, self.R]),
+            EQRR("EQAB", 22, self.memory, self.program_counter, [self.A, self.B, self.R]),
+            EQRR("EQBA", 23, self.memory, self.program_counter, [self.B, self.A, self.R]),
         ]
     
         return instructions

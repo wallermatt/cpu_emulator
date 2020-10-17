@@ -60,6 +60,32 @@ class GTRR(InstructionBase):
             self.components[2].set_contents(0)
 
 
+class LTRR(InstructionBase):
+    '''
+    Compare two registers - if first < second then set third component to 1, else 0
+    '''
+    LENGTH = 1
+
+    def run(self):
+        if self.components[0].get_contents() < self.components[1].get_contents():
+            self.components[2].set_contents(1)
+        else:
+            self.components[2].set_contents(0)
+
+
+class EQRR(InstructionBase):
+    '''
+    Compare two registers - if first == second then set third component to 1, else 0
+    '''
+    LENGTH = 1
+
+    def run(self):
+        if self.components[0].get_contents() == self.components[1].get_contents():
+            self.components[2].set_contents(1)
+        else:
+            self.components[2].set_contents(0)
+
+
 class JMPV(InstructionBase):
     '''
     Jump to address - either immediate or check if specified register/flag is not zero
@@ -88,7 +114,7 @@ class JMNV(InstructionBase):
         self.program_counter.set_contents(address)
 
 
-class INC(InstructionBase):
+class INCR(InstructionBase):
     '''
     Add 1 to specified register
     '''
@@ -97,3 +123,37 @@ class INC(InstructionBase):
     def run(self):
         carry_flag = self.components[0].add_to_contents(1)
         self.components[1].set_contents(carry_flag)
+
+
+class ADDRR(InstructionBase):
+    '''
+    Add specified register to specified register
+    '''
+    LENGTH = 1
+
+    def run(self):
+        carry_flag = self.components[0].add_to_contents(self.components[1].get_contents())
+        self.components[2].set_contents(carry_flag)
+
+
+class DECR(InstructionBase):
+    '''
+    Subtract 1 from specified register
+    '''
+    LENGTH = 1
+
+    def run(self):
+        carry_flag = self.components[0].subtract_from_contents(1)
+        self.components[1].set_contents(carry_flag)
+
+
+class SUBRR(InstructionBase):
+    '''
+    Subtract specified register from specified register
+    '''
+    LENGTH = 1
+
+    def run(self):
+        carry_flag = self.components[0].subtract_from_contents(self.components[1].get_contents())
+        self.components[2].set_contents(carry_flag)
+    

@@ -67,3 +67,78 @@ def test_inca(cpu):
     cpu.instructions_by_name['INCA'].run()
     assert cpu.A.get_contents() == 0
     assert cpu.C.get_contents() == 1
+
+
+def test_ADDAB(cpu):
+    cpu.A.set_contents(0)
+    cpu.B.set_contents(1)
+    cpu.instructions_by_name['ADDAB'].run()
+    assert cpu.A.get_contents() == 1
+    assert cpu.C.get_contents() == 0
+
+    cpu.A.set_contents(10)
+    cpu.B.set_contents(255)
+    cpu.instructions_by_name['ADDAB'].run()
+    assert cpu.A.get_contents() == 9
+    assert cpu.C.get_contents() == 1
+
+
+def test_DECA(cpu):
+    cpu.A.set_contents(1)
+    assert cpu.C.get_contents() == 0
+    cpu.instructions_by_name['DECA'].run()
+    assert cpu.A.get_contents() == 0
+    assert cpu.C.get_contents() == 0
+
+    cpu.A.set_contents(1)
+    cpu.C.set_contents(1) 
+    cpu.instructions_by_name['DECA'].run()
+    assert cpu.A.get_contents() == 0
+    assert cpu.C.get_contents() == 0
+
+    cpu.A.set_contents(0)
+    cpu.instructions_by_name['DECA'].run()
+    assert cpu.A.get_contents() == 255
+    assert cpu.C.get_contents() == 1
+
+
+def test_SUBAB(cpu):
+    cpu.A.set_contents(1)
+    cpu.B.set_contents(1)
+    cpu.instructions_by_name['SUBAB'].run()
+    assert cpu.A.get_contents() == 0
+    assert cpu.C.get_contents() == 0
+
+    cpu.A.set_contents(10)
+    cpu.B.set_contents(255)
+    cpu.instructions_by_name['SUBAB'].run()
+    assert cpu.A.get_contents() == 11
+    assert cpu.C.get_contents() == 1
+
+
+def test_LTAB(cpu):
+    cpu.A.set_contents(1)
+    cpu.B.set_contents(1)
+    cpu.R.set_contents(0)
+    cpu.instructions_by_name['LTAB'].run()
+    assert cpu.R.get_contents() == 0
+
+    cpu.A.set_contents(0)
+    cpu.B.set_contents(1)
+    cpu.R.set_contents(0)
+    cpu.instructions_by_name['LTAB'].run()
+    assert cpu.R.get_contents() == 1
+
+
+def test_EQAB(cpu):
+    cpu.A.set_contents(1)
+    cpu.B.set_contents(1)
+    cpu.R.set_contents(0)
+    cpu.instructions_by_name['EQAB'].run()
+    assert cpu.R.get_contents() == 1
+
+    cpu.A.set_contents(0)
+    cpu.B.set_contents(1)
+    cpu.R.set_contents(0)
+    cpu.instructions_by_name['EQAB'].run()
+    assert cpu.R.get_contents() == 0

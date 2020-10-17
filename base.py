@@ -61,6 +61,14 @@ class Component:
         self.contents = result
         return carry_flag
 
+    def subtract_from_contents(self, value):
+        carry_flag = 0
+        if self.contents >= value:
+            self.contents -= value
+        else:
+            self.contents = self.contents - value + self.MAX_VALUE
+            carry_flag = 1
+        return carry_flag
 
 
 class Memory:
