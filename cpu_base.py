@@ -1,6 +1,6 @@
 import csv
 from base import Component, Memory, InstructionBase
-from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV
+from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INC
 
 
 class CPUTest(InstructionBase):
@@ -46,6 +46,7 @@ class CPUTest(InstructionBase):
             GTRR("GTBA", 10, self.memory, self.program_counter, [self.A,self.R]),
             JMPV("JMPV", 11, self.memory, self.program_counter),
             JMPV("JCRV", 12, self.memory, self.program_counter, [self.R]),
+            INC("INCA", 13, self.memory, self.program_counter, [self.A, self.C]),
         ]
     
         return instructions

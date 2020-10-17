@@ -87,3 +87,13 @@ class JMNV(InstructionBase):
                 return
         self.program_counter.set_contents(address)
 
+
+class INC(InstructionBase):
+    '''
+    Add 1 to specified register
+    '''
+    LENGTH = 1
+
+    def run(self):
+        carry_flag = self.components[0].add_to_contents(1)
+        self.components[1].set_contents(carry_flag)

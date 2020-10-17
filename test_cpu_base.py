@@ -48,3 +48,22 @@ def test_simple_assembler(cpu):
     disassembly = cpu.disassemble()
     assert cpu.memory.dump()[0:4] == [1, 5, 4, 255]
     assert disassembly[0:3] == [[0, 1, 'LDAV', 5], [2, 4, 'LDBA'], [3, 255]]
+
+
+def test_inca(cpu):
+    cpu.A.set_contents(0)
+    assert cpu.C.get_contents() == 0
+    cpu.instructions_by_name['INCA'].run()
+    assert cpu.A.get_contents() == 1
+    assert cpu.C.get_contents() == 0
+
+    cpu.A.set_contents(0)
+    cpu.C.set_contents(1) 
+    cpu.instructions_by_name['INCA'].run()
+    assert cpu.A.get_contents() == 1
+    assert cpu.C.get_contents() == 0
+
+    cpu.A.set_contents(255)
+    cpu.instructions_by_name['INCA'].run()
+    assert cpu.A.get_contents() == 0
+    assert cpu.C.get_contents() == 1

@@ -37,6 +37,8 @@ class MemoryBase(ComponentBase):
 
 class Component:
 
+    MAX_VALUE = 256
+
     def __init__(self, name):
         self.name = name
         self.contents = 0
@@ -49,6 +51,16 @@ class Component:
 
     def set_contents(self, value):
         self.contents = value
+
+    def add_to_contents(self, value):
+        carry_flag = 0
+        result = self.contents + value
+        if result >= self.MAX_VALUE:
+            result = result % self.MAX_VALUE
+            carry_flag = 1
+        self.contents = result
+        return carry_flag
+
 
 
 class Memory:
