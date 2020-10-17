@@ -1,6 +1,6 @@
 import csv
 from base import Component, Memory, InstructionBase
-from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR
+from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV
 
 
 class CPUTest(InstructionBase):
@@ -45,7 +45,7 @@ class CPUTest(InstructionBase):
             GTRR("GTAB", 9, self.memory, self.program_counter, [self.A, self.B, self.R]),
             GTRR("GTBA", 10, self.memory, self.program_counter, [self.B, self.A, self.R]),
             JMPV("JMPV", 11, self.memory, self.program_counter),
-            JMPV("JCRV", 12, self.memory, self.program_counter, [self.R]),
+            JMPV("JMPRV", 12, self.memory, self.program_counter, [self.R]),
             INCR("INCA", 13, self.memory, self.program_counter, [self.A, self.C]),
             INCR("INCB", 14, self.memory, self.program_counter, [self.B, self.C]),
             ADDRR("ADDAB", 15, self.memory, self.program_counter, [self.A, self.B, self.C]),
@@ -58,6 +58,9 @@ class CPUTest(InstructionBase):
             LTRR("LTBA", 21, self.memory, self.program_counter, [self.B, self.A, self.R]),
             EQRR("EQAB", 22, self.memory, self.program_counter, [self.A, self.B, self.R]),
             EQRR("EQBA", 23, self.memory, self.program_counter, [self.B, self.A, self.R]),
+            JMNV("JMNRV", 24, self.memory, self.program_counter, [self.R]),
+            JMPV("JMPCV", 25, self.memory, self.program_counter, [self.C]),
+            JMNV("JMNCV", 26, self.memory, self.program_counter, [self.C]),
         ]
     
         return instructions

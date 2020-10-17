@@ -142,3 +142,17 @@ def test_EQAB(cpu):
     cpu.R.set_contents(0)
     cpu.instructions_by_name['EQAB'].run()
     assert cpu.R.get_contents() == 0
+
+
+def test_JMNV(cpu):
+    cpu.R.set_contents(0)
+    cpu.memory.set_contents_value(100, 150)
+    cpu.program_counter.set_contents(100)
+    cpu.instructions_by_name['JMNRV'].run()
+    assert cpu.program_counter.get_contents() == 150
+
+    cpu.R.set_contents(1)
+    cpu.memory.set_contents_value(100, 150)
+    cpu.program_counter.set_contents(100)
+    cpu.instructions_by_name['JMNRV'].run()
+    assert cpu.program_counter.get_contents() == 101
