@@ -126,11 +126,22 @@ class CPUTest(InstructionBase):
             writer.writerows(disassembly)
 
     def simple_assembler(self, filename):
+        variable_dict = {}
+        line_count = 0
         row_list = self._load_file_to_list(filename)
         contents_list = []
         for row in row_list:
             row = row.replace(' ', '')
             symbols = row.split(',')
+            if ';' in symbols[0]:
+                continue
+            if '=' in symbols[0]:
+                variable_value = symbols[0].split('=')
+                variable_dict[variable_value[0]] = int(variable_value[1])
+                continue
+            if ':' in symbols[0]:
+                variable_dict[symbols[0][:-1]] = line_count
+                continue
             if symbols[0] in self.instructions_by_name:
                 instruction = self.instructions_by_name[symbols[0]]
                 if len(symbols) != instruction.LENGTH:
@@ -140,7 +151,10 @@ class CPUTest(InstructionBase):
                         symbols
                     ))
                 symbols[0] = instruction.opcode
+                line_count += instruction.LENGTH
             for symbol in symbols:
+                if symbol in variable_dict:
+                    symbol = variable_dict[symbol]
                 contents_list.append(int(symbol))
         print(contents_list)
         self.memory.load(contents_list)
