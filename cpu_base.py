@@ -21,12 +21,14 @@ class CPUTest(InstructionBase):
         registers = []
         self.A = Component("A Register")
         self.B = Component("B Register")
+        self.D = Component("D Register")
         self.C = Component("C Carry Flag")
         self.R = Component("R Result Flag")
 
         registers = [
             self.A,
             self.B,
+            self.D,
             self.C,
             self.R
         ]
@@ -66,6 +68,16 @@ class CPUTest(InstructionBase):
             LDIMRV("LDIMBV", 28, self.memory, self.program_counter, [self.B]),
             LDIMRR("LDIMAB", 29, self.memory, self.program_counter, [self.A, self.B]),
             LDIMRR("LDIMBA", 30, self.memory, self.program_counter, [self.B, self.A]),
+            LDRV("LDDV", 31, self.memory, self.program_counter, [self.D]),
+            LDRR("LDDA", 32, self.memory, self.program_counter, [self.D, self.A]),
+            LDRR("LDDB", 33, self.memory, self.program_counter, [self.D, self.B]),
+            LDIMRV("LDIMDV", 34, self.memory, self.program_counter, [self.D]),
+            LDIMRR("LDIMDA", 35, self.memory, self.program_counter, [self.D, self.A]),
+            LDIMRR("LDIMDB", 36, self.memory, self.program_counter, [self.D, self.B]),
+            INCR("INCD", 37, self.memory, self.program_counter, [self.D, self.C]),
+            DECR("DECD", 38, self.memory, self.program_counter, [self.D, self.C]),
+            ADDRR("ADDDA", 39, self.memory, self.program_counter, [self.D, self.A, self.C]),
+            ADDRR("ADDDB", 40, self.memory, self.program_counter, [self.D, self.B, self.C]),
         ]
     
         return instructions
