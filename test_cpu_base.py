@@ -156,3 +156,26 @@ def test_JMNV(cpu):
     cpu.program_counter.set_contents(100)
     cpu.instructions_by_name['JMNRV'].run()
     assert cpu.program_counter.get_contents() == 101
+
+
+def test_LDIMAV(cpu):
+    cpu.A.set_contents(150)
+    cpu.memory.set_contents_value(100, 99)
+    cpu.program_counter.set_contents(100)
+    assert cpu.memory.get_contents_value(150) != 99
+    cpu.instructions_by_name['LDIMAV'].run()
+    assert cpu.memory.get_contents_value(150) == 99
+
+
+def test_simple_assembler_test2(cpu):
+    cpu.simple_assembler('test2.asm')
+    cpu.run()
+    assert cpu.memory.dump()[100:110] == [9-e for e in range(10)]
+
+
+def test_LDIMAB(cpu):
+    cpu.A.set_contents(100)
+    cpu.B.set_contents(99)
+    assert cpu.memory.get_contents_value(100) != 99
+    cpu.instructions_by_name['LDIMAB'].run()
+    assert cpu.memory.get_contents_value(100) == 99

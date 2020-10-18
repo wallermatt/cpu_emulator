@@ -1,8 +1,9 @@
 import csv
 from base import Component, Memory, InstructionBase
-from microcode import LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV
-
-
+from microcode import (
+    LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
+    LDIMRR
+)
 class CPUTest(InstructionBase):
 
     MEMORY_SIZE = 256
@@ -61,6 +62,10 @@ class CPUTest(InstructionBase):
             JMNV("JMNRV", 24, self.memory, self.program_counter, [self.R]),
             JMPV("JMPCV", 25, self.memory, self.program_counter, [self.C]),
             JMNV("JMNCV", 26, self.memory, self.program_counter, [self.C]),
+            LDIMRV("LDIMAV", 27, self.memory, self.program_counter, [self.A]),
+            LDIMRV("LDIMBV", 28, self.memory, self.program_counter, [self.B]),
+            LDIMRR("LDIMAB", 29, self.memory, self.program_counter, [self.A, self.B]),
+            LDIMRR("LDIMBA", 30, self.memory, self.program_counter, [self.B, self.A]),
         ]
     
         return instructions
@@ -112,6 +117,7 @@ class CPUTest(InstructionBase):
         row_list = self._load_file_to_list(filename)
         contents_list = []
         for row in row_list:
+            row = row.replace(' ', '')
             symbols = row.split(',')
             if symbols[0] in self.instructions_by_name:
                 instruction = self.instructions_by_name[symbols[0]]

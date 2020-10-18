@@ -47,6 +47,30 @@ class LDMR(InstructionBase):
         self.memory.set_contents_value(address, value)
 
 
+class LDIMRV(InstructionBase):
+    '''
+    Load memory location specified in register with value
+    '''
+    LENGTH = 2
+
+    def run(self):
+        value = self.get_memory_location_contents_and_inc_pc()
+        address= self.components[0].get_contents()
+        self.memory.set_contents_value(address, value)
+
+
+class LDIMRR(InstructionBase):
+    '''
+    Load memory location specified in register 1 with value in register 2
+    '''
+    LENGTH = 1
+
+    def run(self):
+        address= self.components[0].get_contents()
+        value= self.components[1].get_contents()
+        self.memory.set_contents_value(address, value)
+
+
 class GTRR(InstructionBase):
     '''
     Compare two registers - if first > second then set third component to 1, else 0
