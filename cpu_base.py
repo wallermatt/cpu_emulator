@@ -130,6 +130,7 @@ class CPUTest(InstructionBase):
         line_count = 0
         row_list = self._load_file_to_list(filename)
         contents_list = []
+
         for row in row_list:
             row = row.replace(' ', '')
             symbols = row.split(',')
@@ -152,6 +153,19 @@ class CPUTest(InstructionBase):
                     ))
                 symbols[0] = instruction.opcode
                 line_count += instruction.LENGTH
+
+        for row in row_list:
+            row = row.replace(' ', '')
+            symbols = row.split(',')
+            if ';' in symbols[0]:
+                continue
+            if '=' in symbols[0]:
+                continue
+            if ':' in symbols[0]:
+                continue
+            if symbols[0] in self.instructions_by_name:
+                instruction = self.instructions_by_name[symbols[0]]
+                symbols[0] = instruction.opcode
             for symbol in symbols:
                 if symbol in variable_dict:
                     symbol = variable_dict[symbol]

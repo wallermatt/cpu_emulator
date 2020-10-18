@@ -5,8 +5,9 @@ LD AV,start_loc
 LD BV,i
 loop:
 DEC B
-JMP CV,12
+JMP CV,end
 LDIM AB
 INC A
 JMP V,loop
+end:
 0
