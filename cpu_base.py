@@ -2,7 +2,7 @@ import csv
 from base import Component, Memory, InstructionBase
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
-    LDIMRR
+    LDIMRR, LDIRRM
 )
 class CPUTest(InstructionBase):
 
@@ -78,6 +78,9 @@ class CPUTest(InstructionBase):
             DECR("DECD", 38, self.memory, self.program_counter, [self.D, self.C]),
             ADDRR("ADDDA", 39, self.memory, self.program_counter, [self.D, self.A, self.C]),
             ADDRR("ADDDB", 40, self.memory, self.program_counter, [self.D, self.B, self.C]),
+            GTRR("GTDB", 41, self.memory, self.program_counter, [self.D, self.B, self.R]),
+            LDIRRM("LDIADM", 42, self.memory, self.program_counter, [self.A, self.D]),
+            LDIRRM("LDIBDM", 43, self.memory, self.program_counter, [self.B, self.D]),
         ]
     
         return instructions

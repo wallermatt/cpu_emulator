@@ -179,3 +179,11 @@ def test_LDIMAB(cpu):
     assert cpu.memory.get_contents_value(100) != 99
     cpu.instructions_by_name['LDIMAB'].run()
     assert cpu.memory.get_contents_value(100) == 99
+
+
+def test_LDIADM(cpu):
+    cpu.A.set_contents(0)
+    cpu.D.set_contents(100)
+    cpu.memory.set_contents_value(100, 99)
+    cpu.instructions_by_name['LDIADM'].run()
+    assert cpu.A.get_contents() == 99
