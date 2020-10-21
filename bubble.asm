@@ -36,7 +36,9 @@ end_of_data_reached:
 LD AM,swap_flag_loc
 LD BV,false
 EQAB
+; if no swaps this pass finish
 JMP RV,end
+; if swaps then reset flag and start new iteration
 LD MB,swap_flag_loc
 LD DV,start_data_loc
 JMP V,main_loop

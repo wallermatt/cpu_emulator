@@ -187,3 +187,18 @@ def test_LDIADM(cpu):
     cpu.memory.set_contents_value(100, 99)
     cpu.instructions_by_name['LDIADM'].run()
     assert cpu.A.get_contents() == 99
+
+def test_get_all_registers_contents(cpu):
+    cpu.A.set_contents(3)
+    cpu.B.set_contents(4)
+    cpu.D.set_contents(5)
+    cpu.C.set_contents(1)
+    cpu.R.set_contents(1)
+    assert cpu.get_all_registers_contents() == {
+        'A Register': 3,
+        'B Register': 4,
+        'C Carry Flag': 1,
+        'D Register': 5,
+        'R Result Flag': 1,
+        'program_counter': 0
+    }

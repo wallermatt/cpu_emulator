@@ -30,7 +30,8 @@ class CPUTest(InstructionBase):
             self.B,
             self.D,
             self.C,
-            self.R
+            self.R,
+            self.program_counter
         ]
 
         return registers
@@ -176,5 +177,6 @@ class CPUTest(InstructionBase):
         print(contents_list)
         self.memory.load(contents_list)
 
-
+    def get_all_registers_contents(self):
+        return {r.name: r.get_contents() for r in self.registers}
 
