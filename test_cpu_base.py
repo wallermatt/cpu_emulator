@@ -195,10 +195,17 @@ def test_get_all_registers_contents(cpu):
     cpu.C.set_contents(1)
     cpu.R.set_contents(1)
     assert cpu.get_all_registers_contents() == {
-        'A Register': 3,
-        'B Register': 4,
-        'C Carry Flag': 1,
-        'D Register': 5,
-        'R Result Flag': 1,
+        'A': 3,
+        'B': 4,
+        'C': 1,
+        'D': 5,
+        'R': 1,
         'program_counter': 0
     }
+
+def test_compare_state_copies(cpu):
+    old_state = cpu.copy_current_state_values_into_dict()
+    cpu.A.set_contents(1)
+    new_state = cpu.copy_current_state_values_into_dict()
+    changes = cpu.compare_state_copies(old_state, new_state)
+    assert changes == {"A": (0,1)}

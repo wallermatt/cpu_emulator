@@ -14,5 +14,5 @@ cpu.memory.set_contents_value(127, 3)
 cpu.memory.set_contents_value(128, 2)
 cpu.memory.set_contents_value(129, 1)
 
-cpu.run()
+cpu.run(debug=True)
 print(cpu.memory.dump()[120:130])

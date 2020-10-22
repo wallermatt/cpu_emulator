@@ -7,23 +7,24 @@ from microcode import (
 class CPUTest(InstructionBase):
 
     MEMORY_SIZE = 256
-    PROGRAM_COUNTER = "program_counter"
+    PROGRAM_COUNTER = "P"
 
     def __init__(self):
         self.memory = Memory(self.MEMORY_SIZE)
         self.program_counter = Component(self.PROGRAM_COUNTER)
         self.registers = self._define_registers()
+        self.registers_by_name ={reg.name: reg for reg in self.registers}
         self.instructions = self._define_instructions()
         self.instructions_by_opcode = {ins.opcode: ins for ins in self.instructions}
         self.instructions_by_name = {ins.name: ins for ins in self.instructions}
 
     def _define_registers(self):
         registers = []
-        self.A = Component("A Register")
-        self.B = Component("B Register")
-        self.D = Component("D Register")
-        self.C = Component("C Carry Flag")
-        self.R = Component("R Result Flag")
+        self.A = Component("A")
+        self.B = Component("B")
+        self.D = Component("D")
+        self.C = Component("C")
+        self.R = Component("R")
 
         registers = [
             self.A,
@@ -98,11 +99,23 @@ class CPUTest(InstructionBase):
             row_list = [r.strip('\n') for r in f.readlines()]
         return row_list
     
-    def run(self):
+    def run(self, debug=False):
+        old_state, new_state = {}, {}
         print("Starting CPU execution at {}".format(self.program_counter.get_contents()))
+        if debug:
+            old_state = self.copy_current_state_values_into_dict()
         opcode = self.get_memory_location_contents_and_inc_pc()
         while opcode != 0:
             self.instructions_by_opcode[opcode].run()
+            if debug:
+                new_state = self.copy_current_state_values_into_dict()
+                changes = self.compare_state_copies(old_state, new_state)
+                if self.PROGRAM_COUNTER in changes:
+                    pc_changes = changes[self.PROGRAM_COUNTER]
+                    if pc_changes[1] - pc_changes[0] == self.instructions_by_opcode[opcode].LENGTH:
+                        changes.pop(self.PROGRAM_COUNTER, None)
+                print( self.instructions_by_opcode[opcode].name, changes)
+                old_state = new_state
             opcode = self.get_memory_location_contents_and_inc_pc()
         print("Ending CPU execution at {}".format(self.program_counter.get_contents()))
 
@@ -180,3 +193,17 @@ class CPUTest(InstructionBase):
     def get_all_registers_contents(self):
         return {r.name: r.get_contents() for r in self.registers}
 
+    def copy_current_state_values_into_dict(self):
+        state_copy = self.get_all_registers_contents()
+
+        for i, contents in enumerate(self.memory.dump()):
+            state_copy[i] = contents
+
+        return state_copy
+
+    def compare_state_copies(self, old, new):
+        changes = {}
+        for component in old:
+            if old[component]  != new[component]:
+                changes[component] = (old[component], new[component])
+        return changes
