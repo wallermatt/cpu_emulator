@@ -200,7 +200,8 @@ def test_get_all_registers_contents(cpu):
         'C': 1,
         'D': 5,
         'R': 1,
-        'program_counter': 0
+        'P': 0,
+        'S': 255,
     }
 
 def test_compare_state_copies(cpu):
@@ -209,3 +210,18 @@ def test_compare_state_copies(cpu):
     new_state = cpu.copy_current_state_values_into_dict()
     changes = cpu.compare_state_copies(old_state, new_state)
     assert changes == {"A": (0,1)}
+
+
+def test_PUSHA(cpu):
+    cpu.A.set_contents(99)
+    cpu.instructions_by_name['PUSHA'].run()
+    assert cpu.stack_pointer.get_contents() == cpu.MEMORY_SIZE - 2
+    assert cpu.memory.get_contents_value(255) == 99
+
+
+def test_POPA(cpu):
+    cpu.B.set_contents(99)
+    cpu.instructions_by_name['PUSHB'].run()
+    cpu.instructions_by_name['POPA'].run()
+    assert cpu.stack_pointer.get_contents() == cpu.MEMORY_SIZE - 1
+    assert cpu.A.get_contents() == 99

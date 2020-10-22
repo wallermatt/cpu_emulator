@@ -2,16 +2,19 @@ import csv
 from base import Component, Memory, InstructionBase
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
-    LDIMRR, LDIRRM
+    LDIMRR, LDIRRM, PUSHR, POPR
 )
 class CPUTest(InstructionBase):
 
     MEMORY_SIZE = 256
     PROGRAM_COUNTER = "P"
+    STACK_POINTER = "S"
 
     def __init__(self):
         self.memory = Memory(self.MEMORY_SIZE)
         self.program_counter = Component(self.PROGRAM_COUNTER)
+        self.stack_pointer = Component(self.STACK_POINTER)
+        self.stack_pointer.set_contents(self.MEMORY_SIZE - 1)
         self.registers = self._define_registers()
         self.registers_by_name ={reg.name: reg for reg in self.registers}
         self.instructions = self._define_instructions()
@@ -32,7 +35,8 @@ class CPUTest(InstructionBase):
             self.D,
             self.C,
             self.R,
-            self.program_counter
+            self.program_counter,
+            self.stack_pointer,
         ]
 
         return registers
@@ -83,6 +87,12 @@ class CPUTest(InstructionBase):
             GTRR("GTDB", 41, self.memory, self.program_counter, [self.D, self.B, self.R]),
             LDIRRM("LDIADM", 42, self.memory, self.program_counter, [self.A, self.D]),
             LDIRRM("LDIBDM", 43, self.memory, self.program_counter, [self.B, self.D]),
+            PUSHR("PUSHA", 44, self.memory, self.stack_pointer, [self.A]),
+            PUSHR("PUSHB", 45, self.memory, self.stack_pointer, [self.B]),
+            PUSHR("PUSHD", 46, self.memory, self.stack_pointer, [self.D]),
+            POPR("POPA", 47, self.memory, self.stack_pointer, [self.A]),
+            POPR("POPB", 48, self.memory, self.stack_pointer, [self.B]),
+            POPR("POPD", 49, self.memory, self.stack_pointer, [self.D]),
         ]
     
         return instructions

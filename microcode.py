@@ -193,3 +193,26 @@ class SUBRR(InstructionBase):
         carry_flag = self.components[0].subtract_from_contents(self.components[1].get_contents())
         self.components[2].set_contents(carry_flag)
     
+
+class PUSHR(InstructionBase):
+    '''
+    Push register contents onto stack
+    '''
+    LENGTH = 1
+
+    def run(self):
+        value = self.components[0].get_contents()
+        self.memory.set_contents_value(self.program_counter.get_contents(), value)
+        self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+
+class POPR(InstructionBase):
+    '''
+    Pop top of stack into register
+    '''
+    LENGTH = 1
+
+    def run(self):
+        stack_head = self.program_counter.get_contents() + 1
+        value = self.memory.get_contents_value(stack_head)
+        self.components[0].set_contents(value)
+        self.program_counter.set_contents(stack_head)
