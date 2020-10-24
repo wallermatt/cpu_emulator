@@ -93,6 +93,8 @@ class CPUTest(InstructionBase):
             POPR("POPA", 47, self.memory, self.stack_pointer, [self.A]),
             POPR("POPB", 48, self.memory, self.stack_pointer, [self.B]),
             POPR("POPD", 49, self.memory, self.stack_pointer, [self.D]),
+            GTRR("GTAD", 50, self.memory, self.program_counter, [self.A, self.D, self.R]),
+            GTRR("GTBD", 51, self.memory, self.program_counter, [self.B, self.D, self.R]),
         ]
     
         return instructions

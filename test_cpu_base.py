@@ -188,6 +188,7 @@ def test_LDIADM(cpu):
     cpu.instructions_by_name['LDIADM'].run()
     assert cpu.A.get_contents() == 99
 
+
 def test_get_all_registers_contents(cpu):
     cpu.A.set_contents(3)
     cpu.B.set_contents(4)
