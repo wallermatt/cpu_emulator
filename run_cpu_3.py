@@ -18,3 +18,4 @@ old = cpu.memory.dump()[200:210]
 cpu.run(debug=True)
 print(old)
 print(cpu.memory.dump()[200:210])
+cpu.disassemble_to_file('qs.csv')

@@ -25,8 +25,8 @@ EQAB
 JMP RV,quicksort_return
 PUSHB
 LD BM,current_start_pointer
-PUSHB
-PUSHB
+;PUSHB
+;PUSHB
 PUSHP
 JMP V,partition
 LD AM,pivot_value_address
