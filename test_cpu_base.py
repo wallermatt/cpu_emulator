@@ -226,3 +226,22 @@ def test_POPA(cpu):
     cpu.instructions_by_name['POPA'].run()
     assert cpu.stack_pointer.get_contents() == cpu.MEMORY_SIZE - 1
     assert cpu.A.get_contents() == 99
+
+
+def test_JMPA(cpu):
+    cpu.A.set_contents(100)
+    cpu.instructions_by_name['JMPA'].run()
+    assert cpu.program_counter.get_contents() == 100
+
+
+def test_JMRA(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.R.set_contents(0)
+    cpu.A.set_contents(100)
+    cpu.instructions_by_name['JMRA'].run()
+    assert cpu.program_counter.get_contents() == 50
+
+    cpu.R.set_contents(1)
+    cpu.instructions_by_name['JMRA'].run()
+    assert cpu.program_counter.get_contents() == 100
+

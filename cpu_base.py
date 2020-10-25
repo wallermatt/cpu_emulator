@@ -2,7 +2,7 @@ import csv
 from base import Component, Memory, InstructionBase
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
-    LDIMRR, LDIRRM, PUSHR, POPR
+    LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR
 )
 class CPUTest(InstructionBase):
 
@@ -95,6 +95,10 @@ class CPUTest(InstructionBase):
             POPR("POPD", 49, self.memory, self.stack_pointer, [self.D]),
             GTRR("GTAD", 50, self.memory, self.program_counter, [self.A, self.D, self.R]),
             GTRR("GTBD", 51, self.memory, self.program_counter, [self.B, self.D, self.R]),
+            JMPR("JMPA", 52, self.memory, self.program_counter, [self.A]),
+            JMPR("JMRA", 53, self.memory, self.program_counter, [self.A, self.R]),
+            PUSHR("PUSHP", 54, self.memory, self.stack_pointer, [self.program_counter]),
+            LDRM("LDDM", 55, self.memory, self.program_counter, [self.D]),
         ]
     
         return instructions

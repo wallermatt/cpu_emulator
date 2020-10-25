@@ -150,6 +150,34 @@ class JMNV(InstructionBase):
         self.program_counter.set_contents(address)
 
 
+class JMPR(InstructionBase):
+    '''
+    Jump to address specified in register - either immediate or check if specified register/flag is set
+    '''
+    LENGTH = 1
+
+    def run(self):
+        address = self.components[0].get_contents()
+        if len(self.components) == 2:
+            if not self.components[1].get_contents():
+                return
+        self.program_counter.set_contents(address)
+
+
+class JMNR(InstructionBase):
+    '''
+    Jump to address specified in register - either immediate or check if specified register/flag is zero
+    '''
+    LENGTH = 1
+
+    def run(self):
+        address = self.components[0].get_contents()
+        if len(self.components) == 2:
+            if self.components[1].get_contents():
+                return
+        self.program_counter.set_contents(address)
+
+
 class INCR(InstructionBase):
     '''
     Add 1 to specified register
