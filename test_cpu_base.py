@@ -38,8 +38,7 @@ def test_hex_to_decimal(cpu):
     assert cpu._hex_to_decimal('1') == 1
     assert cpu._hex_to_decimal('ff') == 255
 
-# get test1.asm from github
-'''
+
 def test_load_file_to_list(cpu):
     row_list = cpu._load_file_to_list('test1.asm')
     assert row_list == ['LDAV,5', 'LDBA', '255']
@@ -50,7 +49,7 @@ def test_simple_assembler(cpu):
     disassembly = cpu.disassemble()
     assert cpu.memory.dump()[0:4] == [1, 5, 4, 255]
     assert disassembly[0:3] == [[0, 1, 'LDAV', 5], [2, 4, 'LDBA'], [3, 255]]
-'''
+
 
 def test_inca(cpu):
     cpu.A.set_contents(0)
