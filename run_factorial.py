@@ -7,4 +7,4 @@ cpu.simple_assembler('factorial.asm')
 
 
 cpu.run(debug=True)
-print(cpu.memory.dump()[150:151])
+print(cpu.memory.dump()[150:152])

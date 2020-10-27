@@ -60,7 +60,7 @@ class CPUTest(InstructionBase):
             ADDRR("ADDAB", 15, self.memory, self.program_counter, [self.A, self.B, self.C]),
             ADDRR("ADDBA", 16, self.memory, self.program_counter, [self.B, self.A, self.C]),
             DECR("DECA", 17, self.memory, self.program_counter, [self.A, self.C]),
-            DECR("DECB", 17, self.memory, self.program_counter, [self.B, self.C]),
+            DECR("DECB", 170, self.memory, self.program_counter, [self.B, self.C]),
             SUBRR("SUBAB", 18, self.memory, self.program_counter, [self.A, self.B, self.C]),
             SUBRR("SUBBA", 19, self.memory, self.program_counter, [self.B, self.A, self.C]),
             LTRR("LTAB", 20, self.memory, self.program_counter, [self.A, self.B, self.R]),
