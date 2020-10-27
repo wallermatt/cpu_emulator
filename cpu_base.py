@@ -99,6 +99,7 @@ class CPUTest(InstructionBase):
             JMPR("JMRA", 53, self.memory, self.program_counter, [self.A, self.R]),
             PUSHR("PUSHP", 54, self.memory, self.stack_pointer, [self.program_counter]),
             LDRM("LDDM", 55, self.memory, self.program_counter, [self.D]),
+            JMPR("JMPB", 56, self.memory, self.program_counter, [self.B]),
         ]
     
         return instructions
