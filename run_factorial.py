@@ -7,4 +7,5 @@ cpu.simple_assembler('factorial_ret.asm')
 
 
 cpu.run(debug=True)
-print(cpu.memory.dump()[150:152])
+print(cpu.B.get_contents())
+print(cpu.memory.dump()[150:255])
