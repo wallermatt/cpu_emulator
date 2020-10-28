@@ -96,12 +96,13 @@ class Memory:
 
 class InstructionBase:
 
-    def __init__(self, name, opcode, memory, program_counter, components=None):
+    def __init__(self, name, opcode, memory, program_counter=None, components=None, stack_pointer=None):
         self.name = name
         self.opcode = opcode
         self.memory = memory
         self.program_counter = program_counter
         self.components = components
+        self.stack_pointer = stack_pointer
 
     def get_memory_location_contents_and_inc_pc(self):
         pc_value = self.program_counter.get_contents()

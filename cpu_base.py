@@ -2,7 +2,7 @@ import csv
 from base import Component, Memory, InstructionBase
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
-    LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR
+    LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR, CALLV, RET
 )
 class CPUTest(InstructionBase):
 
@@ -59,7 +59,6 @@ class CPUTest(InstructionBase):
             INCR("INCB", 14, self.memory, self.program_counter, [self.B, self.C]),
             ADDRR("ADDAB", 15, self.memory, self.program_counter, [self.A, self.B, self.C]),
             ADDRR("ADDBA", 16, self.memory, self.program_counter, [self.B, self.A, self.C]),
-            DECR("DECA", 17, self.memory, self.program_counter, [self.A, self.C]),
             DECR("DECB", 170, self.memory, self.program_counter, [self.B, self.C]),
             SUBRR("SUBAB", 18, self.memory, self.program_counter, [self.A, self.B, self.C]),
             SUBRR("SUBBA", 19, self.memory, self.program_counter, [self.B, self.A, self.C]),
@@ -100,6 +99,13 @@ class CPUTest(InstructionBase):
             PUSHR("PUSHP", 54, self.memory, self.stack_pointer, [self.program_counter]),
             LDRM("LDDM", 55, self.memory, self.program_counter, [self.D]),
             JMPR("JMPB", 56, self.memory, self.program_counter, [self.B]),
+            DECR("DECA", 57, self.memory, self.program_counter, [self.A, self.C]),
+            CALLV("CALLV", 58, self.memory, self.program_counter, None, self.stack_pointer),
+            CALLV("CALRV", 59, self.memory, self.program_counter, [self.R], self.stack_pointer),
+            CALLV("CALCV", 60, self.memory, self.program_counter, [self.C], self.stack_pointer),
+            RET("RET", 61, self.memory, self.program_counter, None, self.stack_pointer),
+            RET("RETR", 62, self.memory, self.program_counter, [self.R], self.stack_pointer),
+            RET("RETC", 63, self.memory, self.program_counter, [self.C], self.stack_pointer),
         ]
     
         return instructions

@@ -247,3 +247,73 @@ def test_JMRA(cpu):
     cpu.instructions_by_name['JMRA'].run()
     assert cpu.program_counter.get_contents() == 100
 
+
+def test_CALLV(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.memory.set_contents_value(50, 99)
+    cpu.stack_pointer.set_contents(255)
+    cpu.instructions_by_name['CALLV'].run()
+    assert cpu.program_counter.get_contents() == 99
+    assert cpu.stack_pointer.get_contents() == 254
+    assert cpu.memory.get_contents_value(255) == 51
+
+
+def test_CALRV_0(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.memory.set_contents_value(255, 0)
+    cpu.memory.set_contents_value(50, 99)
+    cpu.stack_pointer.set_contents(255)
+    cpu.R.set_contents(0)
+    cpu.instructions_by_name['CALRV'].run()
+    assert cpu.program_counter.get_contents() == 51
+    assert cpu.stack_pointer.get_contents() == 255
+    assert cpu.memory.get_contents_value(255) == 0
+
+
+def test_CALRV_1(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.memory.set_contents_value(255, 0)
+    cpu.memory.set_contents_value(50, 99)
+    cpu.stack_pointer.set_contents(255)
+    cpu.R.set_contents(1)
+    cpu.instructions_by_name['CALRV'].run()
+    assert cpu.program_counter.get_contents() == 99
+    assert cpu.stack_pointer.get_contents() == 254
+    assert cpu.memory.get_contents_value(255) == 51
+
+
+def test_CALCV_0(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.memory.set_contents_value(255, 0)
+    cpu.memory.set_contents_value(50, 99)
+    cpu.stack_pointer.set_contents(255)
+    cpu.C.set_contents(0)
+    cpu.instructions_by_name['CALCV'].run()
+    assert cpu.program_counter.get_contents() == 51
+    assert cpu.stack_pointer.get_contents() == 255
+    assert cpu.memory.get_contents_value(255) == 0
+
+
+def test_CALCV_1(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.memory.set_contents_value(255, 0)
+    cpu.memory.set_contents_value(50, 99)
+    cpu.stack_pointer.set_contents(255)
+    cpu.C.set_contents(1)
+    cpu.instructions_by_name['CALCV'].run()
+    assert cpu.program_counter.get_contents() == 99
+    assert cpu.stack_pointer.get_contents() == 254
+    assert cpu.memory.get_contents_value(255) == 51
+
+
+def test_RET(cpu):
+    cpu.program_counter.set_contents(50)
+    cpu.memory.set_contents_value(50, 99)
+    cpu.stack_pointer.set_contents(255)
+    cpu.instructions_by_name['CALLV'].run()
+    assert cpu.program_counter.get_contents() == 99
+    assert cpu.stack_pointer.get_contents() == 254
+    assert cpu.memory.get_contents_value(255) == 51
+    cpu.instructions_by_name['RET'].run()
+    assert cpu.program_counter.get_contents() == 51
+    assert cpu.stack_pointer.get_contents() == 255
