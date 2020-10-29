@@ -2,7 +2,7 @@ import csv
 from base import Component, Memory, InstructionBase
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
-    LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR, CALLV, RET
+    LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR, CALLV, CALNV, RET, RETN
 )
 class CPUTest(InstructionBase):
 
@@ -106,6 +106,10 @@ class CPUTest(InstructionBase):
             RET("RET", 61, self.memory, self.program_counter, None, self.stack_pointer),
             RET("RETR", 62, self.memory, self.program_counter, [self.R], self.stack_pointer),
             RET("RETC", 63, self.memory, self.program_counter, [self.C], self.stack_pointer),
+            CALNV("CANRV", 64, self.memory, self.program_counter, [self.R], self.stack_pointer),
+            CALNV("CANCV", 65, self.memory, self.program_counter, [self.C], self.stack_pointer),
+            RETN("RETNR", 66, self.memory, self.program_counter, [self.R], self.stack_pointer),
+            RETN("RETNC", 67, self.memory, self.program_counter, [self.C], self.stack_pointer),
         ]
     
         return instructions

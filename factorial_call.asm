@@ -2,7 +2,7 @@
 ; load n 
 n_pointer = 150
 result_pointer = 151
-n=10
+n=20
 LD AV,n
 LD DV,n_pointer 
 LDIM DA

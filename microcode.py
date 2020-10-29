@@ -290,3 +290,19 @@ class RET(InstructionBase):
         address = self.memory.get_contents_value(stack_head)
         self.stack_pointer.set_contents(stack_head)
         self.program_counter.set_contents(address)
+
+
+class RETN(InstructionBase):
+    '''
+    Set program counter with address popped from stack - either immediate or check if specified register/flag is zero
+    '''
+    LENGTH = 1
+
+    def run(self):
+        if self.components:
+            if self.components[0].get_contents():
+                return
+        stack_head = self.stack_pointer.get_contents() + 1
+        address = self.memory.get_contents_value(stack_head)
+        self.stack_pointer.set_contents(stack_head)
+        self.program_counter.set_contents(address)
