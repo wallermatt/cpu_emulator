@@ -9,8 +9,7 @@ LD AV,array_start_address
 LD MA,current_start_pointer
 LD AV,array_end_address
 LD MA,current_end_pointer
-PUSHP
-JMP V,quicksort
+CALL V,quicksort
 JMP V,end
 ; quicksort
 quicksort:
@@ -19,25 +18,16 @@ LD BM,current_end_pointer
 SUBBA
 LD AV,0
 EQAB
-JMP RV,quicksort_return
+RETR
 LD AV,1
 EQAB
-JMP RV,quicksort_return
-PUSHB
+RETR
 LD BM,current_start_pointer
-;PUSHB
-;PUSHB
-PUSHP
-JMP V,partition
+CALL V,partition
 LD AM,pivot_value_address
 LD DM,current_start_pointer
 LDI BDM
-; quicksort_return
-quicksort_return:
-POPA
-INCA
-INCA
-JMPA
+RET
 ; partition
 partition:
 LD DM,current_end_pointer
@@ -96,12 +86,7 @@ POPA
 LDIM DA 
 INCD 
 GTDB
-JMP RV,end_write_back
+RET R
 JMP V,write_back_loop
-end_write_back:
-POPA
-INCA
-INCA
-JMPA
 end:
 0
