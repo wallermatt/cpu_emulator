@@ -9,10 +9,9 @@ LD AV,array_start_address
 LD MA,current_start_pointer
 LD AV,array_end_address
 LD MA,current_end_pointer
-CALL V,quicksort
+CALL V,partition
 JMP V,end
-; quicksort
-quicksort:
+partition:
 LD AM,current_start_pointer
 LD BM,current_end_pointer
 SUBBA
@@ -22,14 +21,6 @@ RETR
 LD AV,1
 EQAB
 RETR
-LD BM,current_start_pointer
-CALL V,partition
-LD AM,pivot_value_address
-LD DM,current_start_pointer
-LDI BDM
-RET
-; partition
-partition:
 LD DM,current_end_pointer
 LDI ADM
 LD DM,current_start_pointer
