@@ -128,6 +128,7 @@ class CPUTest(InstructionBase):
         return row_list
     
     def run(self, debug=False):
+        instruction_count = 0
         old_state, new_state = {}, {}
         print("Starting CPU execution at {}".format(self.program_counter.get_contents()))
         if debug:
@@ -135,6 +136,7 @@ class CPUTest(InstructionBase):
         opcode = self.get_memory_location_contents_and_inc_pc()
         while opcode != 0:
             self.instructions_by_opcode[opcode].run()
+            instruction_count += 1
             if debug:
                 new_state = self.copy_current_state_values_into_dict()
                 changes = self.compare_state_copies(old_state, new_state)
@@ -145,7 +147,7 @@ class CPUTest(InstructionBase):
                 print( self.instructions_by_opcode[opcode].name, changes)
                 old_state = new_state
             opcode = self.get_memory_location_contents_and_inc_pc()
-        print("Ending CPU execution at {}".format(self.program_counter.get_contents()))
+        print("Ending CPU execution at {}, instruction count {}".format(self.program_counter.get_contents(), instruction_count))
 
     def disassemble(self):
         disassembly = []
@@ -215,7 +217,6 @@ class CPUTest(InstructionBase):
                 if symbol in variable_dict:
                     symbol = variable_dict[symbol]
                 contents_list.append(int(symbol))
-        print(contents_list)
         self.memory.load(contents_list)
 
     def get_all_registers_contents(self):

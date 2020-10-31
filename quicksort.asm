@@ -3,7 +3,7 @@
 ;
 ; define variables
 array_start_address=200
-array_end_address=209
+array_end_address=220
 current_start_pointer=197
 current_end_pointer=198
 ;

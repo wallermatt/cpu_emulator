@@ -14,8 +14,14 @@ cpu.memory.set_contents_value(207, 3)
 cpu.memory.set_contents_value(208, 2)
 cpu.memory.set_contents_value(209, 5)
 
-old = cpu.memory.dump()[200:210]
-cpu.run(debug=True)
+cpu.memory.set_contents_value(210, 1)
+cpu.memory.set_contents_value(211, 4)
+cpu.memory.set_contents_value(212, 3)
+cpu.memory.set_contents_value(213, 2)
+cpu.memory.set_contents_value(214, 5)
+
+old = cpu.memory.dump()[200:221]
+cpu.run(debug=False)
 print(old)
-print(cpu.memory.dump()[200:210])
-cpu.disassemble_to_file('qs.csv')
+print(cpu.memory.dump()[200:221])
+#cpu.disassemble_to_file('qs.csv')
