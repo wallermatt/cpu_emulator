@@ -110,6 +110,7 @@ class CPUTest(InstructionBase):
             CALNV("CANCV", 65, self.memory, self.program_counter, [self.C], self.stack_pointer),
             RETN("RETNR", 66, self.memory, self.program_counter, [self.R], self.stack_pointer),
             RETN("RETNC", 67, self.memory, self.program_counter, [self.C], self.stack_pointer),
+            LDMR("LDMD", 68, self.memory, self.program_counter, [self.D]),
         ]
     
         return instructions
