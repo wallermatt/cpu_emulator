@@ -1,3 +1,4 @@
+import datetime
 from cpu_base import CPUTest
 
 cpu = CPUTest()
@@ -21,7 +22,9 @@ cpu.memory.set_contents_value(213, 2)
 cpu.memory.set_contents_value(214, 5)
 
 old = cpu.memory.dump()[200:221]
+start = datetime.datetime.now()
 cpu.run(debug=False)
+print(datetime.datetime.now() - start)
 print(old)
 print(cpu.memory.dump()[200:221])
 #cpu.disassemble_to_file('qs.csv')

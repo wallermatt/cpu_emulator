@@ -2,8 +2,8 @@
 swap_flag_loc=103
 false=0
 true=1
-start_data_loc=120
-end_data_loc=129
+start_data_loc=200
+end_data_loc=220
 ; load initial
 LD AV,false
 LD MA,swap_flag_loc
