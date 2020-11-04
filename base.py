@@ -70,6 +70,17 @@ class Component:
             carry_flag = 1
         return carry_flag
 
+class DoubleComponent(Component):
+
+    def __init__(self, name, low_component, high_component):
+        self.name = name
+        self.low = low_component
+        self.high = high_component
+
+    def get_contents(self):
+        return self.high.get_contents() * self.MAX_VALUE + self.low.get_contents()
+
+
 
 class Memory:
 
