@@ -204,6 +204,9 @@ def test_get_all_registers_contents(cpu):
         'R': 1,
         'P': 0,
         'S': 255,
+        'H': 0,
+        'L': 0,
+        'HL': 0,
     }
 
 def test_compare_state_copies(cpu):
@@ -345,3 +348,17 @@ def test_RETR_0(cpu):
     cpu.instructions_by_name['RETR'].run()
     assert cpu.program_counter.get_contents() == 99
     assert cpu.stack_pointer.get_contents() == 254
+
+
+def test_INCHL(cpu):
+    cpu.H.set_contents(0)
+    cpu.L.set_contents(0)
+    cpu.instructions_by_name['INCHL'].run()
+    assert cpu.L.get_contents() == 1
+
+
+def test_DECHL(cpu):
+    cpu.H.set_contents(0)
+    cpu.L.set_contents(1)
+    cpu.instructions_by_name['DECHL'].run()
+    assert cpu.L.get_contents() == 0

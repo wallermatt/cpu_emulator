@@ -37,6 +37,7 @@ class MemoryBase(ComponentBase):
 
 class Component:
 
+    SIZE = 1
     MAX_VALUE = 256
 
     def __init__(self, name):
@@ -70,7 +71,10 @@ class Component:
             carry_flag = 1
         return carry_flag
 
+
 class DoubleComponent(Component):
+
+    SIZE = 2
 
     def __init__(self, name, low_component, high_component):
         self.name = name
@@ -80,6 +84,33 @@ class DoubleComponent(Component):
     def get_contents(self):
         return self.high.get_contents() * self.MAX_VALUE + self.low.get_contents()
 
+    def set_contents_value(self, value):
+        low_value = value % self.MAX_VALUE
+        high_value = value // self.MAX_VALUE
+        self.low.set_contents(low_value)
+        self.high.set_contents(high_value)
+
+    def set_contents(self, low_value, high_value=0):
+        self.low.set_contents(low_value)
+        self.high.set_contents(high_value) 
+
+    def add_to_contents(self, value):
+        low_value = value % self.MAX_VALUE
+        high_value = value // self.MAX_VALUE
+        carry_flag = self.low.add_to_contents(low_value)
+        if carry_flag == 1:
+            high_value += 1
+        carry_flag = self.high.add_to_contents(high_value)
+        return carry_flag
+
+    def subtract_from_contents(self, value):
+        low_value = value % self.MAX_VALUE
+        high_value = value // self.MAX_VALUE
+        carry_flag = self.low.subtract_from_contents(low_value)
+        if carry_flag == 1:
+            high_value += 1
+        carry_flag = self.high.subtract_from_contents(high_value)
+        return carry_flag
 
 
 class Memory:

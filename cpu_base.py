@@ -1,5 +1,5 @@
 import csv
-from base import Component, Memory, InstructionBase
+from base import Component, Memory, InstructionBase, DoubleComponent
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
     LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR, CALLV, CALNV, RET, RETN
@@ -12,7 +12,9 @@ class CPUTest(InstructionBase):
 
     def __init__(self):
         self.memory = Memory(self.MEMORY_SIZE)
-        self.program_counter = Component(self.PROGRAM_COUNTER)
+        self.program_counter_low = Component("PL")
+        self.program_counter_high = Component("PH")
+        self.program_counter = DoubleComponent("P", self.program_counter_low, self.program_counter_high)
         self.stack_pointer = Component(self.STACK_POINTER)
         self.stack_pointer.set_contents(self.MEMORY_SIZE - 1)
         self.registers = self._define_registers()
@@ -28,6 +30,9 @@ class CPUTest(InstructionBase):
         self.D = Component("D")
         self.C = Component("C")
         self.R = Component("R")
+        self.H = Component("H")
+        self.L = Component("L")
+        self.HL = DoubleComponent("HL", self.L, self.H)
 
         registers = [
             self.A,
@@ -37,6 +42,9 @@ class CPUTest(InstructionBase):
             self.R,
             self.program_counter,
             self.stack_pointer,
+            self.H,
+            self.L,
+            self.HL,
         ]
 
         return registers
@@ -111,6 +119,9 @@ class CPUTest(InstructionBase):
             RETN("RETNR", 66, self.memory, self.program_counter, [self.R], self.stack_pointer),
             RETN("RETNC", 67, self.memory, self.program_counter, [self.C], self.stack_pointer),
             LDMR("LDMD", 68, self.memory, self.program_counter, [self.D]),
+            ADDRR("ADDHLA", 69, self.memory, self.program_counter, [self.HL, self.B, self.C]),
+            INCR("INCHL", 70, self.memory, self.program_counter, [self.HL, self.C]),
+            DECR("DECHL", 71, self.memory, self.program_counter, [self.HL, self.C]),
         ]
     
         return instructions

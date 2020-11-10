@@ -7,6 +7,11 @@ class LDRV(InstructionBase):
     '''
     LENGTH = 2
 
+    def __init__(self, name, opcode, memory, program_counter=None, components=None, stack_pointer=None):
+        super().__init__(name, opcode, memory, program_counter, components, stack_pointer)
+        if self.components:
+            self.LENGTH = 1 + self.components[0].SIZE
+
     def run(self):
         value = self.get_memory_location_contents_and_inc_pc()
         self.components[0].set_contents(value)
