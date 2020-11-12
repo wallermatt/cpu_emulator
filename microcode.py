@@ -234,9 +234,18 @@ class PUSHR(InstructionBase):
     LENGTH = 1
 
     def run(self):
-        value = self.components[0].get_contents()
-        self.memory.set_contents_value(self.program_counter.get_contents(), value)
-        self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+        if self.components[0].SIZE == 1:
+            value = self.components[0].get_contents()
+            self.memory.set_contents_value(self.program_counter.get_contents(), value)
+            self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+        else:
+            import pdb; pdb.set_trace()
+            value = self.components[0].high.get_contents()
+            self.memory.set_contents_value(self.program_counter.get_contents(), value)
+            self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+            value = self.components[0].low.get_contents()
+            self.memory.set_contents_value(self.program_counter.get_contents(), value)
+            self.program_counter.set_contents(self.program_counter.get_contents() - 1)
 
 class POPR(InstructionBase):
     '''

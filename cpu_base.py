@@ -6,7 +6,7 @@ from microcode import (
 )
 class CPUTest(InstructionBase):
 
-    MEMORY_SIZE = 256
+    MEMORY_SIZE = 256 * 256
     PROGRAM_COUNTER = "P"
     STACK_POINTER = "S"
 
@@ -122,6 +122,8 @@ class CPUTest(InstructionBase):
             ADDRR("ADDHLA", 69, self.memory, self.program_counter, [self.HL, self.B, self.C]),
             INCR("INCHL", 70, self.memory, self.program_counter, [self.HL, self.C]),
             DECR("DECHL", 71, self.memory, self.program_counter, [self.HL, self.C]),
+            PUSHR("PUSHHL", 72, self.memory, self.stack_pointer, [self.HL]),
+            POPR("POPHL", 73, self.memory, self.stack_pointer, [self.HL]),
         ]
     
         return instructions

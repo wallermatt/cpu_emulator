@@ -203,7 +203,7 @@ def test_get_all_registers_contents(cpu):
         'D': 5,
         'R': 1,
         'P': 0,
-        'S': 255,
+        'S': 65535,
         'H': 0,
         'L': 0,
         'HL': 0,
@@ -221,7 +221,21 @@ def test_PUSHA(cpu):
     cpu.A.set_contents(99)
     cpu.instructions_by_name['PUSHA'].run()
     assert cpu.stack_pointer.get_contents() == cpu.MEMORY_SIZE - 2
-    assert cpu.memory.get_contents_value(255) == 99
+    assert cpu.memory.get_contents_value(65535) == 99
+
+
+def test_PUSHHL(cpu):
+    cpu.HL.set_contents(99)
+    cpu.instructions_by_name['PUSHHL'].run()
+    assert cpu.stack_pointer.get_contents() == cpu.MEMORY_SIZE - 3
+    assert cpu.memory.get_contents_value(65535) == 0
+    assert cpu.memory.get_contents_value(65534) == 99
+
+    cpu.HL.set_contents(1000)
+    cpu.instructions_by_name['PUSHHL'].run()
+    assert cpu.stack_pointer.get_contents() == cpu.MEMORY_SIZE - 5
+    assert cpu.memory.get_contents_value(65533) == 0
+    assert cpu.memory.get_contents_value(65532) == 99
 
 
 def test_POPA(cpu):

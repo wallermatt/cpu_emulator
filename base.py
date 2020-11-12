@@ -51,6 +51,8 @@ class Component:
         return self.contents
 
     def set_contents(self, value):
+        if value > self.MAX_VALUE:
+            raise Exception('Value {} > MAX_VALUE {}'.format(value, self.MAX_VALUE))
         self.contents = value
 
     def add_to_contents(self, value):
