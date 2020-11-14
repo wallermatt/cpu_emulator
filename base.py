@@ -77,6 +77,7 @@ class Component:
 class DoubleComponent(Component):
 
     SIZE = 2
+    MAX_VALUE = 256 * 256
 
     def __init__(self, name, low_component, high_component):
         self.name = name
@@ -84,11 +85,11 @@ class DoubleComponent(Component):
         self.high = high_component
 
     def get_contents(self):
-        return self.high.get_contents() * self.MAX_VALUE + self.low.get_contents()
+        return self.high.get_contents() * self.high.MAX_VALUE + self.low.get_contents()
 
     def set_contents_value(self, value):
-        low_value = value % self.MAX_VALUE
-        high_value = value // self.MAX_VALUE
+        low_value = value % self.low.MAX_VALUE
+        high_value = value // self.high.MAX_VALUE
         self.low.set_contents(low_value)
         self.high.set_contents(high_value)
 
@@ -97,8 +98,8 @@ class DoubleComponent(Component):
         self.high.set_contents(high_value) 
 
     def add_to_contents(self, value):
-        low_value = value % self.MAX_VALUE
-        high_value = value // self.MAX_VALUE
+        low_value = value % self.low.MAX_VALUE
+        high_value = value // self.high.MAX_VALUE
         carry_flag = self.low.add_to_contents(low_value)
         if carry_flag == 1:
             high_value += 1
@@ -106,8 +107,8 @@ class DoubleComponent(Component):
         return carry_flag
 
     def subtract_from_contents(self, value):
-        low_value = value % self.MAX_VALUE
-        high_value = value // self.MAX_VALUE
+        low_value = value % self.low.MAX_VALUE
+        high_value = value // self.high.MAX_VALUE
         carry_flag = self.low.subtract_from_contents(low_value)
         if carry_flag == 1:
             high_value += 1
@@ -151,7 +152,7 @@ class InstructionBase:
     def get_memory_location_contents_and_inc_pc(self):
         pc_value = self.program_counter.get_contents()
         contents = self.memory.get_contents_value(pc_value)
-        self.program_counter.set_contents(pc_value + 1)
+        self.program_counter.set_contents_value(pc_value + 1)
         return contents
 
     def run(self):

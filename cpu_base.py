@@ -15,8 +15,10 @@ class CPUTest(InstructionBase):
         self.program_counter_low = Component("PL")
         self.program_counter_high = Component("PH")
         self.program_counter = DoubleComponent("P", self.program_counter_low, self.program_counter_high)
-        self.stack_pointer = Component(self.STACK_POINTER)
-        self.stack_pointer.set_contents(self.MEMORY_SIZE - 1)
+        self.stack_pointer_low = Component("SL")
+        self.stack_pointer_high = Component("SH")
+        self.stack_pointer = DoubleComponent("S", self.stack_pointer_low, self.stack_pointer_high)
+        self.stack_pointer.set_contents_value(self.MEMORY_SIZE - 1)
         self.registers = self._define_registers()
         self.registers_by_name ={reg.name: reg for reg in self.registers}
         self.instructions = self._define_instructions()

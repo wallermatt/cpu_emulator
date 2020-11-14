@@ -237,15 +237,15 @@ class PUSHR(InstructionBase):
         if self.components[0].SIZE == 1:
             value = self.components[0].get_contents()
             self.memory.set_contents_value(self.program_counter.get_contents(), value)
-            self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+            self.program_counter.set_contents_value(self.program_counter.get_contents() - 1)
         else:
-            import pdb; pdb.set_trace()
             value = self.components[0].high.get_contents()
             self.memory.set_contents_value(self.program_counter.get_contents(), value)
-            self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+            self.program_counter.set_contents_value(self.program_counter.get_contents() - 1)
             value = self.components[0].low.get_contents()
             self.memory.set_contents_value(self.program_counter.get_contents(), value)
-            self.program_counter.set_contents(self.program_counter.get_contents() - 1)
+            self.program_counter.set_contents_value(self.program_counter.get_contents() - 1)
+
 
 class POPR(InstructionBase):
     '''
@@ -254,40 +254,58 @@ class POPR(InstructionBase):
     LENGTH = 1
 
     def run(self):
-        stack_head = self.program_counter.get_contents() + 1
-        value = self.memory.get_contents_value(stack_head)
-        self.components[0].set_contents(value)
-        self.program_counter.set_contents(stack_head)
+        if self.components[0].SIZE == 1:
+            stack_head = self.program_counter.get_contents() + 1
+            value = self.memory.get_contents_value(stack_head)
+            self.components[0].set_contents(value)
+            self.program_counter.set_contents_value(stack_head)
+        else:
+            stack_head = self.program_counter.get_contents() + 1
+            low_value = self.memory.get_contents_value(stack_head)
+            stack_head = self.program_counter.get_contents() + 2
+            high_value = self.memory.get_contents_value(stack_head)
+            self.components[0].set_contents(low_value, high_value)
+            self.program_counter.set_contents_value(stack_head)
+
 
 class CALLV(InstructionBase):
     '''
     Push address of next instruction on stack then jump to address - either immediate or check if specified register/flag is not zero
     '''
-    LENGTH = 2
+    LENGTH = 3
 
     def run(self):
-        address = self.get_memory_location_contents_and_inc_pc()
+        low_address = self.get_memory_location_contents_and_inc_pc()
+        high_address = self.get_memory_location_contents_and_inc_pc()
         if self.components:
             if not self.components[0].get_contents():
                 return
-        self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.get_contents())
-        self.stack_pointer.set_contents(self.stack_pointer.get_contents() - 1)
-        self.program_counter.set_contents(address)
+
+        self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.high.get_contents())
+        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.low.get_contents())
+        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.program_counter.set_contents(low_address, high_address)
+
 
 class CALNV(InstructionBase):
     '''
     Push address of next instruction on stack then jump to address - either immediate or check if specified register/flag is zero
     '''
-    LENGTH = 2
+    LENGTH = 3
 
     def run(self):
-        address = self.get_memory_location_contents_and_inc_pc()
+        low_address = self.get_memory_location_contents_and_inc_pc()
+        high_address = self.get_memory_location_contents_and_inc_pc()
         if self.components:
             if self.components[0].get_contents():
                 return
-        self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.get_contents())
-        self.stack_pointer.set_contents(self.stack_pointer.get_contents() - 1)
-        self.program_counter.set_contents(address)
+        
+        self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.high.get_contents())
+        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.low.get_contents())
+        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.program_counter.set_contents(low_address, high_address)
 
 
 class RET(InstructionBase):
@@ -301,9 +319,11 @@ class RET(InstructionBase):
             if not self.components[0].get_contents():
                 return
         stack_head = self.stack_pointer.get_contents() + 1
-        address = self.memory.get_contents_value(stack_head)
-        self.stack_pointer.set_contents(stack_head)
-        self.program_counter.set_contents(address)
+        low_address = self.memory.get_contents_value(stack_head)
+        stack_head += 1
+        high_address = self.memory.get_contents_value(stack_head)
+        self.stack_pointer.set_contents_value(stack_head)
+        self.program_counter.set_contents(low_address, high_address)
 
 
 class RETN(InstructionBase):
@@ -318,5 +338,5 @@ class RETN(InstructionBase):
                 return
         stack_head = self.stack_pointer.get_contents() + 1
         address = self.memory.get_contents_value(stack_head)
-        self.stack_pointer.set_contents(stack_head)
-        self.program_counter.set_contents(address)
+        self.stack_pointer.set_contents_value(stack_head)
+        self.program_counter.set_contents_value(address)
