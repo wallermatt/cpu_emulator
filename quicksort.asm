@@ -4,8 +4,8 @@
 ; define variables
 array_start_address=200
 array_end_address=220
-current_start_pointer=197
-current_end_pointer=198
+current_start_pointer=190
+current_end_pointer=195
 ;
 ; set initial current start and end variables
 LD AV,array_start_address

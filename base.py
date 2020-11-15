@@ -51,6 +51,8 @@ class Component:
         return self.contents
 
     def set_contents(self, value):
+        if value > self.MAX_VALUE:
+            raise Exception('Value {} > MAX_VALUE {}'.format(value, self.MAX_VALUE))
         self.contents = value
 
     def add_to_contents(self, value):
@@ -75,6 +77,7 @@ class Component:
 class DoubleComponent(Component):
 
     SIZE = 2
+    MAX_VALUE = 256 * 256
 
     def __init__(self, name, low_component, high_component):
         self.name = name
@@ -82,11 +85,11 @@ class DoubleComponent(Component):
         self.high = high_component
 
     def get_contents(self):
-        return self.high.get_contents() * self.MAX_VALUE + self.low.get_contents()
+        return self.high.get_contents() * self.high.MAX_VALUE + self.low.get_contents()
 
     def set_contents_value(self, value):
-        low_value = value % self.MAX_VALUE
-        high_value = value // self.MAX_VALUE
+        low_value = value % self.low.MAX_VALUE
+        high_value = value // self.high.MAX_VALUE
         self.low.set_contents(low_value)
         self.high.set_contents(high_value)
 
@@ -95,8 +98,8 @@ class DoubleComponent(Component):
         self.high.set_contents(high_value) 
 
     def add_to_contents(self, value):
-        low_value = value % self.MAX_VALUE
-        high_value = value // self.MAX_VALUE
+        low_value = value % self.low.MAX_VALUE
+        high_value = value // self.high.MAX_VALUE
         carry_flag = self.low.add_to_contents(low_value)
         if carry_flag == 1:
             high_value += 1
@@ -104,8 +107,8 @@ class DoubleComponent(Component):
         return carry_flag
 
     def subtract_from_contents(self, value):
-        low_value = value % self.MAX_VALUE
-        high_value = value // self.MAX_VALUE
+        low_value = value % self.low.MAX_VALUE
+        high_value = value // self.high.MAX_VALUE
         carry_flag = self.low.subtract_from_contents(low_value)
         if carry_flag == 1:
             high_value += 1
@@ -118,13 +121,19 @@ class Memory:
     def __init__(self, size):
         self.contents = [ComponentBase("address: {}".format(e)) for e in range(size)]
 
-    def get_contents(self, address):
+    def get_contents(self, address, high_address=None):
+        if high_address:
+            address = self._low_high_to_single_value(address, high_address)
         return self.contents[address]
 
-    def get_contents_value(self, address):
+    def get_contents_value(self, address, high_address=None):
+        if high_address:
+            address = self._low_high_to_single_value(address, high_address)
         return self.contents[address].get_contents()
 
-    def set_contents_value(self, address, value):
+    def set_contents_value(self, address, value, high_address=None):
+        if high_address:
+            address = self._low_high_to_single_value(address, high_address)
         self.contents[address].set_contents(value)
 
     def dump(self):
@@ -133,6 +142,9 @@ class Memory:
     def load(self, data):
         for address,value in enumerate(data):
             self.contents[address].set_contents(value)
+
+    def _low_high_to_single_value(self, low_value, high_value):
+        return 256 * high_value + low_value
 
 
 
@@ -149,7 +161,7 @@ class InstructionBase:
     def get_memory_location_contents_and_inc_pc(self):
         pc_value = self.program_counter.get_contents()
         contents = self.memory.get_contents_value(pc_value)
-        self.program_counter.set_contents(pc_value + 1)
+        self.program_counter.set_contents_value(pc_value + 1)
         return contents
 
     def run(self):
