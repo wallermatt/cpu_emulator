@@ -8,5 +8,5 @@ print(cpu.memory.dump()[0:20])
 start = datetime.datetime.now()
 cpu.run(debug=True)
 print(datetime.datetime.now() - start)
-print(cpu.memory.dump()[200:221])
+print(cpu.memory.dump()[100:121])
 #

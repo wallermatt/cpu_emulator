@@ -6,6 +6,7 @@ from microcode import (
 )
 class CPUTest(InstructionBase):
 
+    SINGLE_MAX = 256
     MEMORY_SIZE = 256 * 256
     PROGRAM_COUNTER = "P"
     STACK_POINTER = "S"
@@ -126,6 +127,7 @@ class CPUTest(InstructionBase):
             DECR("DECHL", 71, self.memory, self.program_counter, [self.HL, self.C]),
             PUSHR("PUSHHL", 72, self.memory, self.stack_pointer, [self.HL]),
             POPR("POPHL", 73, self.memory, self.stack_pointer, [self.HL]),
+            LDRV("LDHLV", 74, self.memory, self.program_counter, [self.HL]),
         ]
     
         return instructions
@@ -135,6 +137,11 @@ class CPUTest(InstructionBase):
 
     def _hex_to_decimal(self, hex_str):
         return int(hex_str, 16)
+
+    def _value_to_low_and_high(self, value):
+        low_value = value % self.SINGLE_MAX
+        high_value = value // self.SINGLE_MAX
+        return low_value, high_value
 
     def _load_file_to_list(self, filename):
         row_list = []
@@ -207,12 +214,14 @@ class CPUTest(InstructionBase):
                 continue
             if symbols[0] in self.instructions_by_name:
                 instruction = self.instructions_by_name[symbols[0]]
-                if len(symbols) != instruction.LENGTH:
-                    raise('{} length is {} but symbols are {}'. format(
+                '''
+                if len(symbols)  instruction.LENGTH:
+                    raise Exception('{} length is {} but symbols are {}'. format(
                         instruction.name,
                         instruction.LENGTH,
                         symbols
                     ))
+                '''
                 symbols[0] = instruction.opcode
                 line_count += instruction.LENGTH
 
@@ -228,10 +237,16 @@ class CPUTest(InstructionBase):
             if symbols[0] in self.instructions_by_name:
                 instruction = self.instructions_by_name[symbols[0]]
                 symbols[0] = instruction.opcode
-            for symbol in symbols:
+                contents_list.append(int(symbols[0]))
+            for symbol in symbols[1:]:
                 if symbol in variable_dict:
                     symbol = variable_dict[symbol]
-                contents_list.append(int(symbol))
+                if instruction.LENGTH == 3:
+                    low_value, high_value = self._value_to_low_and_high(int(symbol))
+                    contents_list.append(low_value)
+                    contents_list.append(high_value)
+                else:
+                    contents_list.append(int(symbol))
         self.memory.load(contents_list)
 
     def get_all_registers_contents(self):

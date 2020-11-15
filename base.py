@@ -121,13 +121,19 @@ class Memory:
     def __init__(self, size):
         self.contents = [ComponentBase("address: {}".format(e)) for e in range(size)]
 
-    def get_contents(self, address):
+    def get_contents(self, address, high_address=None):
+        if high_address:
+            address = self._low_high_to_single_value(address, high_address)
         return self.contents[address]
 
-    def get_contents_value(self, address):
+    def get_contents_value(self, address, high_address=None):
+        if high_address:
+            address = self._low_high_to_single_value(address, high_address)
         return self.contents[address].get_contents()
 
-    def set_contents_value(self, address, value):
+    def set_contents_value(self, address, value, high_address=None):
+        if high_address:
+            address = self._low_high_to_single_value(address, high_address)
         self.contents[address].set_contents(value)
 
     def dump(self):
@@ -136,6 +142,9 @@ class Memory:
     def load(self, data):
         for address,value in enumerate(data):
             self.contents[address].set_contents(value)
+
+    def _low_high_to_single_value(self, low_value, high_value):
+        return 256 * high_value + low_value
 
 
 

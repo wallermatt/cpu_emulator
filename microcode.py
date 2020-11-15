@@ -32,11 +32,12 @@ class LDRM(InstructionBase):
     '''
     Load memory location value into specified register
     '''
-    LENGTH = 2
+    LENGTH = 3
 
     def run(self):
-        address = self.get_memory_location_contents_and_inc_pc()
-        value = self.memory.get_contents_value(address)
+        low_address = self.get_memory_location_contents_and_inc_pc()
+        high_address = self.get_memory_location_contents_and_inc_pc()
+        value = self.memory.get_contents_value(low_address, high_address)
         self.components[0].set_contents(value)
 
 
@@ -44,12 +45,13 @@ class LDMR(InstructionBase):
     '''
     Load register into memory location
     '''
-    LENGTH = 2
+    LENGTH = 3
 
     def run(self):
-        address = self.get_memory_location_contents_and_inc_pc()
+        low_address = self.get_memory_location_contents_and_inc_pc()
+        high_address = self.get_memory_location_contents_and_inc_pc()
         value = self.components[0].get_contents()
-        self.memory.set_contents_value(address, value)
+        self.memory.set_contents_value(low_address, value, high_address)
 
 
 class LDIMRV(InstructionBase):
@@ -71,8 +73,8 @@ class LDIMRR(InstructionBase):
     LENGTH = 1
 
     def run(self):
-        address= self.components[0].get_contents()
-        value= self.components[1].get_contents()
+        address = self.components[0].get_contents()
+        value = self.components[1].get_contents()
         self.memory.set_contents_value(address, value)
 
 
@@ -131,28 +133,30 @@ class JMPV(InstructionBase):
     '''
     Jump to address - either immediate or check if specified register/flag is not zero
     '''
-    LENGTH = 2
+    LENGTH = 3
 
     def run(self):
-        address = self.get_memory_location_contents_and_inc_pc()
+        low_address = self.get_memory_location_contents_and_inc_pc()
+        high_address = self.get_memory_location_contents_and_inc_pc()
         if self.components:
             if not self.components[0].get_contents():
                 return
-        self.program_counter.set_contents(address)
+        self.program_counter.set_contents(low_address, high_address)
 
 
 class JMNV(InstructionBase):
     '''
     Jump to address - either immediate or check if specified register/flag is zero
     '''
-    LENGTH = 2
+    LENGTH = 3
 
     def run(self):
-        address = self.get_memory_location_contents_and_inc_pc()
+        low_address = self.get_memory_location_contents_and_inc_pc()
+        high_address = self.get_memory_location_contents_and_inc_pc()
         if self.components:
             if self.components[0].get_contents():
                 return
-        self.program_counter.set_contents(address)
+        self.program_counter.set_contents(low_address, high_address)
 
 
 class JMPR(InstructionBase):
@@ -166,7 +170,7 @@ class JMPR(InstructionBase):
         if len(self.components) == 2:
             if not self.components[1].get_contents():
                 return
-        self.program_counter.set_contents(address)
+        self.program_counter.set_contents_value(address)
 
 
 class JMNR(InstructionBase):
@@ -180,7 +184,7 @@ class JMNR(InstructionBase):
         if len(self.components) == 2:
             if self.components[1].get_contents():
                 return
-        self.program_counter.set_contents(address)
+        self.program_counter.set_contents_value(address)
 
 
 class INCR(InstructionBase):
@@ -337,6 +341,8 @@ class RETN(InstructionBase):
             if self.components[0].get_contents():
                 return
         stack_head = self.stack_pointer.get_contents() + 1
-        address = self.memory.get_contents_value(stack_head)
+        low_address = self.memory.get_contents_value(stack_head)
+        stack_head += 1
+        high_address = self.memory.get_contents_value(stack_head)
         self.stack_pointer.set_contents_value(stack_head)
-        self.program_counter.set_contents_value(address)
+        self.program_counter.set_contents(low_address, high_address)
