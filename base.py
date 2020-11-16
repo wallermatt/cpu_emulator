@@ -1,40 +1,4 @@
 
-
-class ComponentBase:
-
-    def __init__(self, name):
-        self.name = name
-        self.contents = 0
-
-    def get_name(self):
-        return self.name
-
-    def get_contents(self):
-        return self.contents
-
-    def set_contents(self, value):
-        self.contents = value
-
-
-class MemoryBase(ComponentBase):
-
-    def __init__(self, name, size):
-        self.name = name
-        self.contents = [ComponentBase("address: {}".format(e)) for e in range(size)]
-
-    def get_contents(self, address):
-        return self.contents[address]
-
-    def get_contents_value(self, address):
-        return self.contents[address].get_contents()
-
-    def set_contents_value(self, address, value):
-        self.contents[address].set_contents(value)
-
-    def dump(self):
-        return [e.get_contents() for e in self.contents]
-
-
 class Component:
 
     SIZE = 1
@@ -119,7 +83,7 @@ class DoubleComponent(Component):
 class Memory:
 
     def __init__(self, size):
-        self.contents = [ComponentBase("address: {}".format(e)) for e in range(size)]
+        self.contents = [Component("address: {}".format(e)) for e in range(size)]
 
     def get_contents(self, address, high_address=None):
         if high_address:
@@ -148,7 +112,7 @@ class Memory:
 
 
 
-class InstructionBase:
+class Instruction:
 
     def __init__(self, name, opcode, memory, program_counter=None, components=None, stack_pointer=None):
         self.name = name

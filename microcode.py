@@ -1,7 +1,7 @@
-from base import InstructionBase
+from base import Instruction
 
 
-class LDRV(InstructionBase):
+class LDRV(Instruction):
     '''
     Load value into specified register
     '''
@@ -17,7 +17,7 @@ class LDRV(InstructionBase):
         self.components[0].set_contents(value)
 
 
-class LDRR(InstructionBase):
+class LDRR(Instruction):
     '''
     Load contents from register 1 to register 0
     '''
@@ -28,7 +28,7 @@ class LDRR(InstructionBase):
         self.components[0].set_contents(value)
 
 
-class LDRM(InstructionBase):
+class LDRM(Instruction):
     '''
     Load memory location value into specified register
     '''
@@ -41,7 +41,7 @@ class LDRM(InstructionBase):
         self.components[0].set_contents(value)
 
 
-class LDMR(InstructionBase):
+class LDMR(Instruction):
     '''
     Load register into memory location
     '''
@@ -54,7 +54,7 @@ class LDMR(InstructionBase):
         self.memory.set_contents_value(low_address, value, high_address)
 
 
-class LDIMRV(InstructionBase):
+class LDIMRV(Instruction):
     '''
     Load memory location specified in register with value
     '''
@@ -66,7 +66,7 @@ class LDIMRV(InstructionBase):
         self.memory.set_contents_value(address, value)
 
 
-class LDIMRR(InstructionBase):
+class LDIMRR(Instruction):
     '''
     Load memory location specified in register 1 with value in register 2
     '''
@@ -78,7 +78,7 @@ class LDIMRR(InstructionBase):
         self.memory.set_contents_value(address, value)
 
 
-class LDIRRM(InstructionBase):
+class LDIRRM(Instruction):
     '''
     Load register 1 with value in memory location specified by register 2
     '''
@@ -90,7 +90,7 @@ class LDIRRM(InstructionBase):
         self.components[0].set_contents(value)
 
 
-class GTRR(InstructionBase):
+class GTRR(Instruction):
     '''
     Compare two registers - if first > second then set third component to 1, else 0
     '''
@@ -103,7 +103,7 @@ class GTRR(InstructionBase):
             self.components[2].set_contents(0)
 
 
-class LTRR(InstructionBase):
+class LTRR(Instruction):
     '''
     Compare two registers - if first < second then set third component to 1, else 0
     '''
@@ -116,7 +116,7 @@ class LTRR(InstructionBase):
             self.components[2].set_contents(0)
 
 
-class EQRR(InstructionBase):
+class EQRR(Instruction):
     '''
     Compare two registers - if first == second then set third component to 1, else 0
     '''
@@ -129,7 +129,7 @@ class EQRR(InstructionBase):
             self.components[2].set_contents(0)
 
 
-class JMPV(InstructionBase):
+class JMPV(Instruction):
     '''
     Jump to address - either immediate or check if specified register/flag is not zero
     '''
@@ -144,7 +144,7 @@ class JMPV(InstructionBase):
         self.program_counter.set_contents(low_address, high_address)
 
 
-class JMNV(InstructionBase):
+class JMNV(Instruction):
     '''
     Jump to address - either immediate or check if specified register/flag is zero
     '''
@@ -159,7 +159,7 @@ class JMNV(InstructionBase):
         self.program_counter.set_contents(low_address, high_address)
 
 
-class JMPR(InstructionBase):
+class JMPR(Instruction):
     '''
     Jump to address specified in register - either immediate or check if specified register/flag is set
     '''
@@ -173,7 +173,7 @@ class JMPR(InstructionBase):
         self.program_counter.set_contents_value(address)
 
 
-class JMNR(InstructionBase):
+class JMNR(Instruction):
     '''
     Jump to address specified in register - either immediate or check if specified register/flag is zero
     '''
@@ -187,7 +187,7 @@ class JMNR(InstructionBase):
         self.program_counter.set_contents_value(address)
 
 
-class INCR(InstructionBase):
+class INCR(Instruction):
     '''
     Add 1 to specified register
     '''
@@ -198,7 +198,7 @@ class INCR(InstructionBase):
         self.components[1].set_contents(carry_flag)
 
 
-class ADDRR(InstructionBase):
+class ADDRR(Instruction):
     '''
     Add specified register to specified register
     '''
@@ -209,7 +209,7 @@ class ADDRR(InstructionBase):
         self.components[2].set_contents(carry_flag)
 
 
-class DECR(InstructionBase):
+class DECR(Instruction):
     '''
     Subtract 1 from specified register
     '''
@@ -220,7 +220,7 @@ class DECR(InstructionBase):
         self.components[1].set_contents(carry_flag)
 
 
-class SUBRR(InstructionBase):
+class SUBRR(Instruction):
     '''
     Subtract specified register from specified register
     '''
@@ -231,7 +231,7 @@ class SUBRR(InstructionBase):
         self.components[2].set_contents(carry_flag)
     
 
-class PUSHR(InstructionBase):
+class PUSHR(Instruction):
     '''
     Push register contents onto stack
     '''
@@ -241,17 +241,17 @@ class PUSHR(InstructionBase):
         if self.components[0].SIZE == 1:
             value = self.components[0].get_contents()
             self.memory.set_contents_value(self.program_counter.get_contents(), value)
-            self.program_counter.set_contents_value(self.program_counter.get_contents() - 1)
+            self.program_counter.subtract_from_contents(1)
         else:
             value = self.components[0].high.get_contents()
             self.memory.set_contents_value(self.program_counter.get_contents(), value)
-            self.program_counter.set_contents_value(self.program_counter.get_contents() - 1)
+            self.program_counter.subtract_from_contents(1)
             value = self.components[0].low.get_contents()
             self.memory.set_contents_value(self.program_counter.get_contents(), value)
-            self.program_counter.set_contents_value(self.program_counter.get_contents() - 1)
+            self.program_counter.subtract_from_contents(1)
 
 
-class POPR(InstructionBase):
+class POPR(Instruction):
     '''
     Pop top of stack into register
     '''
@@ -266,13 +266,13 @@ class POPR(InstructionBase):
         else:
             stack_head = self.program_counter.get_contents() + 1
             low_value = self.memory.get_contents_value(stack_head)
-            stack_head = self.program_counter.get_contents() + 2
+            stack_head += 1
             high_value = self.memory.get_contents_value(stack_head)
             self.components[0].set_contents(low_value, high_value)
             self.program_counter.set_contents_value(stack_head)
 
 
-class CALLV(InstructionBase):
+class CALLV(Instruction):
     '''
     Push address of next instruction on stack then jump to address - either immediate or check if specified register/flag is not zero
     '''
@@ -286,13 +286,13 @@ class CALLV(InstructionBase):
                 return
 
         self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.high.get_contents())
-        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.stack_pointer.subtract_from_contents(1)
         self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.low.get_contents())
-        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.stack_pointer.subtract_from_contents(1)
         self.program_counter.set_contents(low_address, high_address)
 
 
-class CALNV(InstructionBase):
+class CALNV(Instruction):
     '''
     Push address of next instruction on stack then jump to address - either immediate or check if specified register/flag is zero
     '''
@@ -306,13 +306,13 @@ class CALNV(InstructionBase):
                 return
         
         self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.high.get_contents())
-        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.stack_pointer.subtract_from_contents(1)
         self.memory.set_contents_value(self.stack_pointer.get_contents(), self.program_counter.low.get_contents())
-        self.stack_pointer.set_contents_value(self.stack_pointer.get_contents() - 1)
+        self.stack_pointer.subtract_from_contents(1)
         self.program_counter.set_contents(low_address, high_address)
 
 
-class RET(InstructionBase):
+class RET(Instruction):
     '''
     Set program counter with address popped from stack - either immediate or check if specified register/flag is not zero
     '''
@@ -330,7 +330,7 @@ class RET(InstructionBase):
         self.program_counter.set_contents(low_address, high_address)
 
 
-class RETN(InstructionBase):
+class RETN(Instruction):
     '''
     Set program counter with address popped from stack - either immediate or check if specified register/flag is zero
     '''

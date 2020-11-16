@@ -1,10 +1,10 @@
 import csv
-from base import Component, Memory, InstructionBase, DoubleComponent
+from base import Component, Memory, Instruction, DoubleComponent
 from microcode import (
     LDRV, LDRR, LDRM, LDMR, GTRR, JMPV, INCR, ADDRR, DECR, SUBRR, LTRR, EQRR, JMNV, LDIMRV,
     LDIMRR, LDIRRM, PUSHR, POPR, JMPR, JMNR, CALLV, CALNV, RET, RETN
 )
-class CPUTest(InstructionBase):
+class CPUTest(Instruction):
 
     SINGLE_MAX = 256
     MEMORY_SIZE = 256 * 256
