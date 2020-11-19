@@ -214,14 +214,6 @@ class CPUTest(Instruction):
                 continue
             if symbols[0] in self.instructions_by_name:
                 instruction = self.instructions_by_name[symbols[0]]
-                '''
-                if len(symbols)  instruction.LENGTH:
-                    raise Exception('{} length is {} but symbols are {}'. format(
-                        instruction.name,
-                        instruction.LENGTH,
-                        symbols
-                    ))
-                '''
                 symbols[0] = instruction.opcode
                 line_count += instruction.LENGTH
 
